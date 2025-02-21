@@ -71,7 +71,7 @@ if (window.location.pathname == "/list.html"){
 
     function createUser(name, email) {
         // Send a POST request to create a new user
-        fetch('https://y-thread-3.vercel.app/api/users', {  // Ensure to use the correct URL here
+        fetch('/api/users', {  // Ensure to use the correct URL here
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
