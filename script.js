@@ -70,58 +70,31 @@ if (window.location.pathname == "/list.html"){
     }
 
     function createUser(name, email) {
-        fetch("api/users")
-            .then(response => response.json())
-            .then(users => {
-                let userExists = users.some(user => user.name === name);
-                
-                if (userExists) {
-                    console.log("User created previously");
-
-                    let username = localStorage.getItem("username");
-
-                    fetch("api/users")
-                      .then(response => response.json())
-                      .then(users => {
-                        // Find the user by name
-                        let user = users.find(u => u.name === username);
-                        
-                        if (user) {
-                            let useremail = localStorage.getItem("useremail");
-                            if (useremail !== user.email){
-                                let useremail = user.email;
-                                document.getElementById(`topPageInfoDisplay`).textContent += ` - ` + `This account was created previously so your info is not the true info. The server says its "` + useremail +`"`
-                                localStorage.setItem("username", username); // Save username in local storage
-                                localStorage.setItem("useremail", useremail); // save email/info to local storage
-                            }
-                        
-
-                          // Now you can use the user's email
-                        } else {
-                          console.log("User not found!");
-                        }
-                      })
-                      .catch(error => {
-                        console.error("Error fetching user info:", error);
-                      });
-                
-                } else {
-                    // If the user doesn't exist, proceed with creation
-                    fetch('api/users', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ name, email })
-                    })
-                    .then(response => response.json())
-                    .then(data => console.log("User created:", data))
-                    .catch(error => console.error("Error creating user:", error));
-                    console.log("User created now");
-                }
-            })
-            .catch(error => console.error("Error fetching users:", error));
+        // Send a POST request to create a new user
+        fetch('https://y-thread-3.vercel.app/api/users', {  // Ensure to use the correct URL here
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to create user');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("User created:", data);
+            alert("User created successfully!");
+            // Optionally reload the user list or navigate
+        })
+        .catch(error => {
+            console.error("Error creating user:", error);
+            alert("Error creating user.");
+        });
     }
+    
     
 
 
